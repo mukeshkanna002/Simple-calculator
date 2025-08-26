@@ -1,19 +1,28 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <title>Simple Interest Calculator</title>
-    <link rel="stylesheet" href="style.css">
+  <meta charset="UTF-8">
+  <title>Interest Calculator</title>
+  <link rel="stylesheet" href="style.css">
 </head>
 <body>
-    <div class="container">
-        <h2>Simple Interest Calculator</h2>
-        <label>Principal Amount: <input type="number" id="principal" /></label><br><br>
-        <label>Start Date: <input type="date" id="startDate" /></label><br><br>
-        <label>End Date (optional): <input type="date" id="endDate" /></label><br><br>
-        <button onclick="calculateInterest()">Calculate Interest</button>
-        <h3 id="result"></h3>
-    </div>
-    <script src="script.js"></script>
+  <div class="container">
+    <h1>Interest Calculator</h1>
+
+    <label>Start Date</label>
+    <input type="date" id="startDate">
+
+    <label>End Date</label>
+    <input type="date" id="endDate">
+
+    <label>Principal Amount</label>
+    <input type="number" id="amount" placeholder="Enter amount">
+
+    <button onclick="calculateInterest()">Calculate</button>
+
+    <div id="output"></div>
+  </div>
+
+  <script src="script.js"></script>
 </body>
 </html>
