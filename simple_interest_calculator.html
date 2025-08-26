@@ -1,0 +1,90 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Simple Interest Calculator</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 40px;
+            background-color: #f4f4f4;
+        }
+        .container {
+            background-color: white;
+            padding: 30px;
+            border-radius: 10px;
+            max-width: 400px;
+            margin: auto;
+            box-shadow: 0 0 10px rgba(0,0,0,0.1);
+        }
+        h2 {
+            text-align: center;
+        }
+        label {
+            display: block;
+            margin-top: 15px;
+        }
+        input {
+            width: 100%;
+            padding: 8px;
+            margin-top: 5px;
+        }
+        button {
+            margin-top: 20px;
+            padding: 10px;
+            width: 100%;
+            background-color: #007BFF;
+            color: white;
+            border: none;
+            border-radius: 5px;
+        }
+        #result {
+            margin-top: 20px;
+            font-weight: bold;
+            text-align: center;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h2>Simple Interest Calculator</h2>
+        <label for="principal">Principal Amount:</label>
+        <input type="number" id="principal" placeholder="Enter principal amount">
+
+        <label for="startDate">Start Date:</label>
+        <input type="date" id="startDate">
+
+        <label for="endDate">End Date (optional):</label>
+        <input type="date" id="endDate">
+
+        <button onclick="calculateInterest()">Calculate Interest</button>
+
+        <div id="result"></div>
+    </div>
+
+    <script>
+        function calculateInterest() {
+            const principal = parseFloat(document.getElementById("principal").value);
+            const startDate = new Date(document.getElementById("startDate").value);
+            const endDateInput = document.getElementById("endDate").value;
+            const endDate = endDateInput ? new Date(endDateInput) : new Date();
+
+            if (isNaN(principal) || isNaN(startDate.getTime())) {
+                document.getElementById("result").innerText = "Please enter valid principal and start date.";
+                return;
+            }
+
+            const msPerDay = 1000 * 60 * 60 * 24;
+            const durationDays = Math.floor((endDate - startDate) / msPerDay);
+            const durationYears = durationDays / 365;
+
+            const interestRate = 0.02; // 2% per annum
+            const interest = principal * interestRate * durationYears;
+
+            document.getElementById("result").innerText =
+                `Simple interest on ₹${principal.toFixed(2)} from ${startDate.toDateString()} to ${endDate.toDateString()} at 2% per annum is ₹${interest.toFixed(2)}.`;
+        }
+    </script>
+</body>
+</html>
