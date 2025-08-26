@@ -1,51 +1,58 @@
 function calculateInterest() {
-  const startDate = new Date(document.getElementById("startDate").value);
-  const endDate = new Date(document.getElementById("endDate").value);
-  const principal = parseFloat(document.getElementById("amount").value);
+  const start = new Date(document.getElementById("start").value);
+  const endInput = document.getElementById("end").value;
+  const end = endInput ? new Date(endInput) : new Date(); // default today
+  const amount = parseFloat(document.getElementById("amount").value);
+  const selectedRate = parseFloat(document.getElementById("rate").value);
 
-  if (isNaN(startDate) || isNaN(endDate) || isNaN(principal)) {
-    alert("Please enter all fields correctly!");
+  if (!start || isNaN(amount)) {
+    alert("Please enter valid start date and amount.");
     return;
   }
 
-  // Calculate months & days
-  let totalMonths =
-    (endDate.getFullYear() - startDate.getFullYear()) * 12 +
-    (endDate.getMonth() - startDate.getMonth());
+  // calculate duration
+  let years = end.getFullYear() - start.getFullYear();
+  let months = end.getMonth() - start.getMonth();
+  let days = end.getDate() - start.getDate();
 
-  let dayDiff = endDate.getDate() - startDate.getDate();
-  if (dayDiff < 0) {
-    totalMonths -= 1;
-    const prevMonthDays = new Date(endDate.getFullYear(), endDate.getMonth(), 0).getDate();
-    dayDiff = prevMonthDays + dayDiff;
+  if (days < 0) {
+    months -= 1;
+    const prevMonth = new Date(end.getFullYear(), end.getMonth(), 0);
+    days += prevMonth.getDate();
   }
 
-  // Apply rules
-  let displayDays = dayDiff;
-  if (dayDiff <= 5) {
-    dayDiff = 0;
-  } else if (dayDiff > 5 && dayDiff <= 17) {
-    dayDiff = 15;
-  } else if (dayDiff > 17) {
+  if (months < 0) {
+    years -= 1;
+    months += 12;
+  }
+
+  let totalMonths = years * 12 + months;
+
+  // apply day rounding rule
+  if (days > 17) {
     totalMonths += 1;
-    dayDiff = 0;
-    displayDays = 0;
+  } else if (days > 5) {
+    totalMonths += 0.5;
   }
 
-  // Convert 15 days = half month
-  let effectiveMonths = totalMonths + (dayDiff === 15 ? 0.5 : 0);
+  // Calculate interest + totals
+  const interest1 = amount * 0.015 * totalMonths;
+  const interest2 = amount * 0.02 * totalMonths;
 
-  // Interest rates
-  const interest1 = (principal * 0.015 * effectiveMonths).toFixed(2);
-  const interest2 = (principal * 0.02 * effectiveMonths).toFixed(2);
+  const total1 = amount + interest1;
+  const total2 = amount + interest2;
 
-  const total1 = (principal + parseFloat(interest1)).toFixed(2);
-  const total2 = (principal + parseFloat(interest2)).toFixed(2);
+  // highlight selected rate
+  const highlightStyle = "color: green; font-weight: bold;";
 
-  document.getElementById("output").innerHTML = `
-    <div class="result">
-      <p><strong>Duration:</strong> ${totalMonths} month(s) ${displayDays > 0 ? displayDays + " day(s)" : ""}</p>
-      <p><strong>Interest @1.5%:</strong> ₹${interest1} → Total: ₹${total1}</p>
-      <p><strong>Interest @2%:</strong> ₹${interest2} → Total: ₹${total2}</p>
-    </div>;
+  const resultDiv = document.getElementById("result");
+  resultDiv.style.display = "block";
+  resultDiv.innerHTML = `
+    <h2>Results</h2>
+    <p><strong>Duration:</strong> ${years} years, ${months} months, ${days} days</p>
+    <p><strong>Total months (with rounding):</strong> ${totalMonths}</p>
+    <p>💰 Interest @ 1.5%: <span style="${selectedRate === 1.5 ? highlightStyle : ""}">₹${interest1.toFixed(2)}</span></p>
+    <p>📊 Total @ 1.5%: <span style="${selectedRate === 1.5 ? highlightStyle : ""}">₹${total1.toFixed(2)}</span></p>
+    <p>💰 Interest @ 2%: <span style="${selectedRate === 2 ? highlightStyle : ""}">₹${interest2.toFixed(2)}</span></p>
+    <p>📊 Total @ 2%: <span style="${selectedRate === 2 ? highlightStyle : ""}">₹${total2.toFixed(2)}</span></p>;
 }
